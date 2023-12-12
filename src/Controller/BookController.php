@@ -22,7 +22,7 @@ class BookController extends AbstractController
     }
 
     #[Route('/api/books/{id}', name: 'detailBook', methods: ['GET'])]
-    public function getDetailBook(int $id, SerializerInterface $serializer, Book $book): JsonResponse
+    public function getDetailBook(SerializerInterface $serializer, Book $book): JsonResponse
     {
         $jsonBook = $serializer->serialize($book, 'json', ['groups' => 'getBooks']);
         return new JsonResponse($jsonBook, Response::HTTP_OK, ['accept' => 'json'], true);

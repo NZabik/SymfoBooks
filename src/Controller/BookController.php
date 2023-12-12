@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BookController extends AbstractController
 {
@@ -40,9 +41,14 @@ class BookController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
     #[Route('/api/books', name: "createBook", methods: ['POST'])]
-    public function createBook(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, AuthorRepository $authorRepository): JsonResponse
+    public function createBook(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, AuthorRepository $authorRepository, ValidatorInterface $validator): JsonResponse
     {
         $book = $serializer->deserialize($request->getContent(), Book::class, 'json');
+        // On vérifie les erreurs
+        $errors = $validator->validate($book);
+        if (count($errors) > 0) {
+            return new JsonResponse($serializer->serialize($errors,'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
         // Récupération de l'ensemble des données envoyées sous forme de tableau
         $content = $request->toArray();
         // Récupération de l'idAuthor. S'il n'est pas défini, alors on met -1 par défaut.
@@ -62,9 +68,13 @@ class BookController extends AbstractController
 
     #[Route('/api/books/{id}', name: "updateBook", methods: ['PUT'])]
 
-    public function updateBook(Request $request,SerializerInterface $serializer,Book $currentBook,EntityManagerInterface $em,AuthorRepository $authorRepository): JsonResponse
+    public function updateBook(Request $request,SerializerInterface $serializer,Book $currentBook,EntityManagerInterface $em,AuthorRepository $authorRepository, ValidatorInterface $validator): JsonResponse
     {
         $updatedBook =$serializer->deserialize($request->getContent(),Book::class,'json',[AbstractNormalizer::OBJECT_TO_POPULATE =>$currentBook]);
+        $errors = $validator->validate($updatedBook);
+        if (count($errors) > 0) {
+            return new JsonResponse($serializer->serialize($errors,'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
+        }
         $content = $request->toArray();
         $idAuthor = $content['idAuthor'] ?? -1;
 

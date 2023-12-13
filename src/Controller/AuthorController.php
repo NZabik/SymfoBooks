@@ -19,9 +19,43 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
 
 class AuthorController extends AbstractController
 {
+    /**
+    * Cette méthode permet de récupérer l'ensemble des auteurs.
+    *
+    * @OA\Response(
+    *     response=200,
+    *     description="Retourne la liste des auteurs",
+    *     @OA\JsonContent(
+    *        type="array",
+    *        @OA\Items(ref=@Model(type=Author::class,groups={"getAuthors"}))
+    *     )
+    * )
+    * @OA\Parameter(
+    *     name="page",
+    *     in="query",
+    *     description="La page que l'on veut récupérer",
+    *     @OA\Schema(type="int")
+    * )
+    *
+    * @OA\Parameter(
+    *     name="limit",
+    *     in="query",
+    *     description="Le nombre d'éléments que l'on veut récupérer",
+    *     @OA\Schema(type="int")
+    * )
+    * @OA\Tag(name="Authors")
+    *
+    * @param AuthorRepository $authorRepository
+    * @param SerializerInterface $serializer
+    * @param Request $request
+    * @return JsonResponse
+    */
     #[Route('/api/authors', name: 'author', methods: ['GET'])]
     public function getAllAuthors(AuthorRepository $authorRepository, SerializerInterface $serializer, Request $request, TagAwareCacheInterface $cache): JsonResponse
     {

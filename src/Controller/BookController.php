@@ -76,7 +76,24 @@ class BookController extends AbstractController
 
         return new JsonResponse($jsonBookList, Response::HTTP_OK, [], true);
     }
-
+    /**
+    * Cette méthode permet de rechercher un livre par son ID.
+    *
+    * @OA\Response(
+    *     response=200,
+    *     description="Retourne un livre",
+    *     @OA\JsonContent(
+    *        type="array",
+    *        @OA\Items(ref=@Model(type=Book::class,groups={"getBooks"}))
+    *     )
+    * )
+    * 
+    * @OA\Tag(name="Books")
+    *
+    * @param Book $book
+    * @param SerializerInterface $serializer
+    * @return JsonResponse
+    */
     #[Route('/api/books/{id}', name: 'detailBook', methods: ['GET'])]
     public function getDetailBook(SerializerInterface $serializer, Book $book, VersioningService $versioningService): JsonResponse
     {
@@ -86,6 +103,23 @@ class BookController extends AbstractController
         $jsonBook = $serializer->serialize($book, 'json', $context);
         return new JsonResponse($jsonBook, Response::HTTP_OK, ['accept' => 'json'], true);
     }
+    /**
+    * Cette méthode permet de supprimer un livre par son ID.
+    *
+    * @OA\Response(
+    *     response=200,
+    *     description="Supprime un livre",
+    *     @OA\JsonContent(
+    *        type="array",
+    *        @OA\Items(ref=@Model(type=Book::class,groups={"getBooks"}))
+    *     )
+    * )
+    * 
+    * @OA\Tag(name="Books")
+    *
+    * @param Book $book
+    * @return JsonResponse
+    */
     #[Route('/api/books/{id}', name: 'deleteBook', methods: ['DELETE'])]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour supprimer un livre')]
     public function deleteBook(Book $book, EntityManagerInterface $em, TagAwareCacheInterface $cache): JsonResponse
@@ -95,6 +129,52 @@ class BookController extends AbstractController
         $em->flush();
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
+    /**
+    * Cette méthode permet de créer un livre.
+    *
+    * @OA\Response(
+    *     response=200,
+    *     description="Crée un livre",
+    *     @OA\JsonContent(
+    *        type="array",
+    *        @OA\Items(ref=@Model(type=Book::class,groups={"getBooks"}))
+    *     )
+    * )
+    *
+    *   @OA\Parameter(
+    *     name="title",
+    *     in="query",
+    *     description="Le titre",
+    *     @OA\Schema(type="string")
+    *   )
+    *   @OA\Parameter(
+    *     name="coverText",
+    *     in="query",
+    *     description="La 4ème de couverture",
+    *     @OA\Schema(type="string")
+    *   )
+    *   @OA\Parameter(
+    *     name="comment",
+    *     in="query",
+    *     description="Les commentaires",
+    *     @OA\Schema(type="string")
+    *   )
+    *   @OA\Parameter(
+    *     name="idAuthor",
+    *     in="query",
+    *     description="L'ID de l'auteur",
+    *     @OA\Schema(type="int")
+    *   )
+    * 
+    * @OA\Tag(name="Books")
+    *
+    * @param AuthorRepository $authorRepository
+    * @param SerializerInterface $serializer
+    * @param EntityManagerInterface $em
+    * @param UrlGeneratorInterface $urlGenerator
+    * @param Request $request
+    * @return JsonResponse
+    */
     #[Route('/api/books', name: "createBook", methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour créer un livre')]
     public function createBook(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, AuthorRepository $authorRepository, ValidatorInterface $validator): JsonResponse

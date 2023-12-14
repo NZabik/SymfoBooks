@@ -72,7 +72,24 @@ class AuthorController extends AbstractController
 
         return new JsonResponse($jsonAuthorList, Response::HTTP_OK, [], true);
     }
-
+    /**
+    * Cette méthode permet de rechercher un auteur par son ID.
+    *
+    * @OA\Response(
+    *     response=200,
+    *     description="Retourne un auteur",
+    *     @OA\JsonContent(
+    *        type="array",
+    *        @OA\Items(ref=@Model(type=Author::class,groups={"getAuthors"}))
+    *     )
+    * )
+    * 
+    * @OA\Tag(name="Authors")
+    *
+    * @param Author $author
+    * @param SerializerInterface $serializer
+    * @return JsonResponse
+    */
     #[Route('/api/authors/{id}', name: 'detailAuthor', methods: ['GET'])]
     public function getDetailAuthor(SerializerInterface $serializer, Author $author): JsonResponse
     {
@@ -80,7 +97,23 @@ class AuthorController extends AbstractController
         $jsonAuthor = $serializer->serialize($author, 'json', $context);
         return new JsonResponse($jsonAuthor, Response::HTTP_OK, ['accept' => 'json'], true);
     }
-
+    /**
+    * Cette méthode permet de supprimer un auteur par son ID.
+    *
+    * @OA\Response(
+    *     response=200,
+    *     description="Supprime un auteur",
+    *     @OA\JsonContent(
+    *        type="array",
+    *        @OA\Items(ref=@Model(type=Author::class,groups={"getAuthors"}))
+    *     )
+    * )
+    * 
+    * @OA\Tag(name="Authors")
+    *
+    * @param Author $author
+    * @return JsonResponse
+    */
     #[Route('/api/authors/{id}', name: 'deleteAuthor', methods: ['DELETE'])]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour supprimer un auteur')]
     public function deleteAuthor(Author $author, EntityManagerInterface $em, TagAwareCacheInterface $cache): JsonResponse

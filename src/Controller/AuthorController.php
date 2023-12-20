@@ -123,6 +123,40 @@ class AuthorController extends AbstractController
         $em->flush();
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
+    /**
+    * Cette méthode permet de créer un auteur.
+    *
+    * @OA\Response(
+    *     response=200,
+    *     description="Crée un auteur",
+    *     @OA\JsonContent(
+    *        type="array",
+    *        @OA\Items(ref=@Model(type=Author::class,groups={"getAuthors"}))
+    *     )
+    * )
+    *
+    *  @OA\RequestBody(
+    *     required=true,
+    *     @OA\JsonContent(
+    *         example={
+    *             "firstName": "prénom",
+    *             "lastName": "nom"
+    *         },
+    *         @OA\Schema (
+    *              type="object",
+    *              @OA\Property(property="firstName", required=true, description="prénom", type="string"),
+    *              @OA\Property(property="lastName", required=true, description="nom", type="string")
+    *         )
+    *     )
+    * )
+    * @OA\Tag(name="Authors")
+    *
+    * @param SerializerInterface $serializer
+    * @param EntityManagerInterface $em
+    * @param UrlGeneratorInterface $urlGenerator
+    * @param Request $request
+    * @return JsonResponse
+    */
     #[Route('/api/authors', name: "createAuthor", methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour créer un auteur')]
     public function createAuthor(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, ValidatorInterface $validator): JsonResponse
@@ -140,7 +174,40 @@ class AuthorController extends AbstractController
 
         return new JsonResponse($jsonAuthor, Response::HTTP_CREATED, ["Location" => $location], true);
     }
-
+        /**
+    * Cette méthode permet de modifier un auteur.
+    *
+    * @OA\Response(
+    *     response=200,
+    *     description="Modifie un auteur",
+    *     @OA\JsonContent(
+    *        type="array",
+    *        @OA\Items(ref=@Model(type=Author::class,groups={"getAuthors"}))
+    *     )
+    * )
+    *
+    *  @OA\RequestBody(
+    *     required=true,
+    *     @OA\JsonContent(
+    *         example={
+    *             "firstName": "prénom",
+    *             "lastName": "nom"
+    *         },
+    *         @OA\Schema (
+    *              type="object",
+    *              @OA\Property(property="firstName", required=true, description="prénom", type="string"),
+    *              @OA\Property(property="lastName", required=true, description="nom", type="string")
+    *         )
+    *     )
+    * )
+    * @OA\Tag(name="Authors")
+    *
+    * @param SerializerInterface $serializer
+    * @param EntityManagerInterface $em
+    * @param UrlGeneratorInterface $urlGenerator
+    * @param Request $request
+    * @return JsonResponse
+    */
     #[Route('/api/authors/{id}', name: "updateAuthor", methods: ['PUT'])]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour éditer un auteur')]
     public function updateAuthor(Request $request,SerializerInterface $serializer,Author $currentAuthor,EntityManagerInterface $em, ValidatorInterface $validator, TagAwareCacheInterface $cache): JsonResponse

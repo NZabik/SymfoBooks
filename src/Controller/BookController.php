@@ -141,31 +141,24 @@ class BookController extends AbstractController
     *     )
     * )
     *
-    *   @OA\Parameter(
-    *     name="title",
-    *     in="query",
-    *     description="Le titre",
-    *     @OA\Schema(type="string")
-    *   )
-    *   @OA\Parameter(
-    *     name="coverText",
-    *     in="query",
-    *     description="La 4ème de couverture",
-    *     @OA\Schema(type="string")
-    *   )
-    *   @OA\Parameter(
-    *     name="comment",
-    *     in="query",
-    *     description="Les commentaires",
-    *     @OA\Schema(type="string")
-    *   )
-    *   @OA\Parameter(
-    *     name="idAuthor",
-    *     in="query",
-    *     description="L'ID de l'auteur",
-    *     @OA\Schema(type="int")
-    *   )
-    * 
+    *  @OA\RequestBody(
+    *     required=true,
+    *     @OA\JsonContent(
+    *         example={
+    *             "title": "title",
+    *             "coverText": "coverText",
+    *             "comment": "comment",
+    *             "idAuthor": "35"
+    *         },
+    *         @OA\Schema (
+    *              type="object",
+    *              @OA\Property(property="title", required=true, description="Titre", type="string"),
+    *              @OA\Property(property="coverText", required=true, description="4ème de couverture", type="string"),
+    *              @OA\Property(property="comment", required=false, description="Commentaire", type="string"),
+    *              @OA\Property(property="idAuthor", required=false, description="ID de l'auteur", type="int")
+    *         )
+    *     )
+    * )
     * @OA\Tag(name="Books")
     *
     * @param AuthorRepository $authorRepository
@@ -201,7 +194,44 @@ class BookController extends AbstractController
 
         return new JsonResponse($jsonBook, Response::HTTP_CREATED, ["Location" => $location], true);
     }
-
+    /**
+    * Cette méthode permet de modifier un livre.
+    *
+    * @OA\Response(
+    *     response=200,
+    *     description="Modifie un livre",
+    *     @OA\JsonContent(
+    *        type="array",
+    *        @OA\Items(ref=@Model(type=Book::class,groups={"getBooks"}))
+    *     )
+    * )
+    *
+    *  @OA\RequestBody(
+    *     required=true,
+    *     @OA\JsonContent(
+    *         example={
+    *             "title": "title",
+    *             "coverText": "coverText",
+    *             "comment": "comment",
+    *             "idAuthor": "35"
+    *         },
+    *         @OA\Schema (
+    *              type="object",
+    *              @OA\Property(property="title", required=true, description="Titre", type="string"),
+    *              @OA\Property(property="coverText", required=true, description="4ème de couverture", type="string"),
+    *              @OA\Property(property="comment", required=false, description="Commentaire", type="string"),
+    *              @OA\Property(property="idAuthor", required=false, description="ID de l'auteur", type="int")
+    *         )
+    *     )
+    * )
+    * @OA\Tag(name="Books")
+    *
+    * @param AuthorRepository $authorRepository
+    * @param SerializerInterface $serializer
+    * @param EntityManagerInterface $em
+    * @param Request $request
+    * @return JsonResponse
+    */
     #[Route('/api/books/{id}', name: "updateBook", methods: ['PUT'])]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour éditer un livre')]
     public function updateBook(Request $request, SerializerInterface $serializer, Book $currentBook, EntityManagerInterface $em, AuthorRepository $authorRepository, ValidatorInterface $validator, TagAwareCacheInterface $cache): JsonResponse
@@ -209,6 +239,7 @@ class BookController extends AbstractController
         $newBook = $serializer->deserialize($request->getContent(), Book::class, 'json');
         $currentBook->setTitle($newBook->getTitle());
         $currentBook->setCoverText($newBook->getCoverText());
+        $currentBook->setComment($newBook->getComment());
         // On vérifie les erreurs
         $errors = $validator->validate($currentBook);
         if ($errors->count() > 0) {

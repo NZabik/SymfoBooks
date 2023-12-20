@@ -24,32 +24,32 @@ nelmio_api_doc:
                                 application/json:
                                     schema:
                                         $ref: '#/components/schemas/Token'
-            /api/books:
-                post:
-                    summary: Ajoute un livre
-                    requestBody:
-                        $ref: '#/components/requestBodies/BooksBody'
+            # /api/books:
+            #     post:
+            #         summary: Ajoute un livre
+            #         requestBody:
+            #             $ref: '#/components/requestBodies/BooksBody'
         components:
-            requestBodies:
-                BooksBody:
-                    description: Objet JSON contenant les informations du livre
-                    required: true
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Book'
+            # requestBodies:
+            #     BooksBody:
+            #         description: Objet JSON contenant les informations du livre
+            #         required: true
+            #         content:
+            #             application/json:
+            #                 schema:
+            #                     $ref: '#/components/schemas/Book'
             schemas:
-                Book:
-                    type: object
-                    properties:
-                        title:
-                            type: string
-                        coverText:
-                            type: string
-                        comment:
-                            type: string
-                        idAuthor:
-                            type: int              
+                # Book:
+                #     type: object
+                #     properties:
+                #         title:
+                #             type: string
+                #         coverText:
+                #             type: string
+                #         comment:
+                #             type: string
+                #         idAuthor:
+                #             type: int              
                 Token:
                     type: object
                     properties:

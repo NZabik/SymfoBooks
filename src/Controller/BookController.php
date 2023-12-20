@@ -150,13 +150,8 @@ class BookController extends AbstractController
     *             "comment": "comment",
     *             "idAuthor": "35"
     *         },
-    *         @OA\Schema (
-    *              type="object",
-    *              @OA\Property(property="title", required=true, description="Titre", type="string"),
-    *              @OA\Property(property="coverText", required=true, description="4ème de couverture", type="string"),
-    *              @OA\Property(property="comment", required=false, description="Commentaire", type="string"),
-    *              @OA\Property(property="idAuthor", required=false, description="ID de l'auteur", type="int")
-    *         )
+    *           type="array",
+    *           @OA\Items(ref=@Model(type=Book::class,groups={"getBooks"})),
     *     )
     * )
     * @OA\Tag(name="Books")
@@ -215,13 +210,8 @@ class BookController extends AbstractController
     *             "comment": "comment",
     *             "idAuthor": "35"
     *         },
-    *         @OA\Schema (
-    *              type="object",
-    *              @OA\Property(property="title", required=true, description="Titre", type="string"),
-    *              @OA\Property(property="coverText", required=true, description="4ème de couverture", type="string"),
-    *              @OA\Property(property="comment", required=false, description="Commentaire", type="string"),
-    *              @OA\Property(property="idAuthor", required=false, description="ID de l'auteur", type="int")
-    *         )
+    *           type="array",
+    *           @OA\Items(ref=@Model(type=Book::class,groups={"getBooks"})),
     *     )
     * )
     * @OA\Tag(name="Books")

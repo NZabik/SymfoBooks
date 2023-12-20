@@ -142,11 +142,8 @@ class AuthorController extends AbstractController
     *             "firstName": "prénom",
     *             "lastName": "nom"
     *         },
-    *         @OA\Schema (
-    *              type="object",
-    *              @OA\Property(property="firstName", required=true, description="prénom", type="string"),
-    *              @OA\Property(property="lastName", required=true, description="nom", type="string")
-    *         )
+    *         type="array",
+    *        @OA\Items(ref=@Model(type=Author::class,groups={"getAuthors"}))
     *     )
     * )
     * @OA\Tag(name="Authors")
@@ -193,11 +190,8 @@ class AuthorController extends AbstractController
     *             "firstName": "prénom",
     *             "lastName": "nom"
     *         },
-    *         @OA\Schema (
-    *              type="object",
-    *              @OA\Property(property="firstName", required=true, description="prénom", type="string"),
-    *              @OA\Property(property="lastName", required=true, description="nom", type="string")
-    *         )
+    *         type="array",
+    *        @OA\Items(ref=@Model(type=Author::class,groups={"getAuthors"}))
     *     )
     * )
     * @OA\Tag(name="Authors")

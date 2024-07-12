@@ -60,7 +60,7 @@ class BookController extends AbstractController
     public function getAllBooks(BookRepository $bookRepository, SerializerInterface $serializer, Request $request, TagAwareCacheInterface $cache, VersioningService $versioningService): JsonResponse
     {
         $page = $request->get('page', 1);
-        $limit = $request->get('limit', 3);
+        $limit = $request->get('limit', 100);
         $idCache = "getAllBooks-" . $page . "-" . $limit;
         
         // $bookList = $bookRepository->findAllWithPagination($page,$limit);

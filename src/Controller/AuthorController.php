@@ -60,7 +60,7 @@ class AuthorController extends AbstractController
     public function getAllAuthors(AuthorRepository $authorRepository, SerializerInterface $serializer, Request $request, TagAwareCacheInterface $cache): JsonResponse
     {
         $page = $request->get('page', 1);
-        $limit = $request->get('limit', 3);
+        $limit = $request->get('limit', 100);
         $idCache = "getAllAuthors-" . $page . "-" . $limit;
         $jsonAuthorList = $cache->get($idCache, function (ItemInterface $item) use ($authorRepository, $page, $limit, $serializer) {
             $context = SerializationContext::create()->setGroups(['getAuthors']);
